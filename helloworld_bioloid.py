@@ -14,24 +14,25 @@ p.setGravity(0,0,-9.8)
 planeId = p.loadURDF("plane.urdf")
 
 #start pos and orientation
-bioloidStartPos = [0,0,0.50]
+bioloidStartPos = [0,0,0.22]
 bioloidStartOrientation = p.getQuaternionFromEuler([0,0,30])
 
 #loading model
-bioIds = p.loadURDF("ros-bioloid/src/bioloid_master/urdf/mioloid.urdf", bioloidStartPos, bioloidStartOrientation)
-print(bioIds)
+bioId = p.loadURDF("../ros-bioloid/src/bioloid_master/urdf/mioloid.urdf", bioloidStartPos, bioloidStartOrientation)
+print("Bioloid id:"+ str(bioId))
 
 #add debug slider
 jointIds=[]
 paramIds=[]
-joints_num = p.getNumJoints(bioIds)
+joints_num = p.getNumJoints(bioId)
 
 #print("len init_pos ",len(init_pos))
 print("Number of joints:"+ str(joints_num))
-#
-#for j in range(joints_num):
-#    info = p.getJointInfo(icubId,j)
-#    jointName = info[1]
+
+for j in range(joints_num):
+    info = p.getJointInfo(bioId,j)
+    print(info[1])
+#   jointName = info[1]
 #    jointIds.append(j)
 #    paramIds.append(p.addUserDebugParameter(jointName.decode("utf-8"), info[8], info[9], init_pos[j]/180*m.pi))
 #while True:
@@ -46,6 +47,6 @@ print("Number of joints:"+ str(joints_num))
 for i in range (10000):
     p.stepSimulation()
     time.sleep(1./240.)
-bioloidPos, bioloidOrn = p.getBasePositionAndOrientation(bioIds)
+bioloidPos, bioloidOrn = p.getBasePositionAndOrientation(bioId)
 print(bioloidPos,bioloidOrn)
 p.disconnect()
