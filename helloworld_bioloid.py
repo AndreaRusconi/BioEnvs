@@ -29,7 +29,8 @@ bioId = p.loadURDF("../ros-bioloid/src/bioloid_master/urdf/mioloid_robot_head.ur
 print("Bioloid id:"+ str(bioId))
 
 #add debug slider
-init_pos = [-0.00022756908581942603 , -0.000200384263379346 , 0.00010279144557757175 , 0.00015010634498172459 , 0.0002050663891038947 , -0.00024082488576043486 ,  1.1880585171461655 , -2.31561388612597, 1.1892599041779879 , 1.1880174349839125 , -2.3143761387021726  , 1.1886576104218778 ]
+init_pos = [-0.00022756908581942603 , -0.000200384263379346 , 0.00010279144557757175 , 0.00015010634498172459 , 0.0002050663891038947 , -0.00024082488576043486 ,  1.1880585171461655 , -2.31561388612597, 1.1892599041779879 , 1.1880174349839125 , -2.3143761387021726  , 1.1886576104218778 ] 
+targetPos = [-0.00790527938749156, 0.032147963452107825, 0.23272512105554582, -1.5723172039419893, -0.06225515159135731, 0.009696014494046348,-0.00022756908581942603 , -0.000200384263379346 , 0.00010279144557757175 , 0.00015010634498172459 , 0.0002050663891038947 , -0.00024082488576043486 ,  1.1880585171461655 , -2.31561388612597, 1.1892599041779879 , 1.1880174349839125 , -2.3143761387021726  , 1.1886576104218778 ] 
 jointIds=[]
 paramIds=[]
 jointName=[]
@@ -49,17 +50,28 @@ for j in range(len(freeJointList)):
     paramIds.append(p.addUserDebugParameter(jointName.decode("utf-8"), info[8], info[9], init_pos[j]))
 	
 while True: 
-	pos = []
-	for i in range(len(freeJointList)):
-		p.setJointMotorControl2(bioId,freeJointList[i], p.POSITION_CONTROL,targetPosition=p.readUserDebugParameter(i),targetVelocity=0.0, positionGain=0.25, velocityGain=0.75, force=50)
-	for k in range (len(freeJointList)):
-		info = p.getJointState(bioId, freeJointList[k])
-		pos.append(info[0])
-	
-	p.stepSimulation()
-	d = goal_distance(np.array(pos), np.array(init_pos))
-	print(d)
-	time.sleep(0.01)
+    pos = []
+    orn = []
+    obs = []
+    jointStates = []
+    pos, orn = p.getBasePositionAndOrientation(bioId)
+    obs.extend(list(pos))
+    euler = p.getEulerFromQuaternion(orn)
+    obs.extend(list(euler))
+    for i in range(len(freeJointList)):
+        p.setJointMotorControl2(bioId,freeJointList[i], p.POSITION_CONTROL,targetPosition=p.readUserDebugParameter(i),targetVelocity=0.0, positionGain=0.25, velocityGain=0.75, force=50)
+    for k in range (len(freeJointList)):
+        info = p.getJointState(bioId, freeJointList[k])
+        jointStates.append(info)
+
+
+    jointPoses = [x[0] for x in jointStates]
+    obs.extend(list(jointPoses))
+
+    p.stepSimulation()
+    d = goal_distance(np.array(obs), np.array(targetPos))
+    print(d)
+    time.sleep(0.01)
 
 
    		

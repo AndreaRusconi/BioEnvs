@@ -231,21 +231,20 @@ class bioEnv(gym.Env) :
     def getObservation(self):
         
         observation = []
-        state = p.getLinkState(self.bioId, self.endEffLink, computeLinkVelocity = 1)
-        pos = state[0]
-        orn = state[1]
+        pos , orn = p.getBasePositionAndOrientation(self.bioId)
         euler = p.getEulerFromQuaternion(orn)
         observation.extend(list(pos))
         observation.extend(list(euler)) #roll, pitch, yaw
-   
         jointStates = []
         jointPoses = []
         for i in range(len(self.freeJointList)):
             jointStates.append(p.getJointState(self.bioId, self.freeJointList[i]))
-
         jointPoses = [x[0] for x in jointStates]
         observation.extend(list(jointPoses))
+
         return observation
+
+
 
 
     def applyAction(self, action):
