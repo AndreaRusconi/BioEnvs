@@ -54,7 +54,6 @@ class bioEnv(gym.Env) :
         self.test_phase = test_phase
         self.achieved_goal = []
         self._observation = []#obs della posizione dei joint
-        self.endEffLink = 8
         self._envStepCounter = 0
         self.numControlledJoints = 12
         self.action_dim = 18
@@ -73,7 +72,7 @@ class bioEnv(gym.Env) :
         #self.targetObservation = [-0.00790527938749156, 0.032147963452107825, 0.23272512105554582, -1.5723172039419893, -0.06225515159135731, 0.009696014494046348,||| -0.00022756908581942603, -0.000200384263379346, 0.00010279144557757175, 0.00015010634498172459, 0.0002050663891038947, -0.00024082488576043486, 0.0003120330558368287, 0.00028589470767586384, 1.1880585171461655, -2.31561388612597, 1.1892599041779879, 0.0026689512345122145, 0.0002063148112800855, 0.00012468143046082654, 1.1880174349839125, -2.3143761387021726, 1.1886576104218778, -0.0014707933869243738]
         """12conPos"""
         self.targetObservation = [-0.00790527938749156, 0.032147963452107825, 0.23272512105554582, -1.5723172039419893, -0.06225515159135731, 0.009696014494046348,-0.00022756908581942603 , -0.000200384263379346 , 0.00010279144557757175 , 0.00015010634498172459 , 0.0002050663891038947 , -0.00024082488576043486 ,  1.1880585171461655 , -2.31561388612597, 1.1892599041779879 , 1.1880174349839125 , -2.3143761387021726  , 1.1886576104218778 ] 
-        self._target_dist_min = 1.2
+        self._target_dist_min = 1.5
         self.target_joint_pos = [0,0,0,      0,0,0,      0,0,1.188,-2.315,1.188,0,       0,0,1.188,-2.315,1.188,0]
 
         p.connect(p.GUI)
@@ -114,8 +113,6 @@ class bioEnv(gym.Env) :
             self.applyAction(action)
             p.stepSimulation()
             self._envStepCounter += 1
-
-        print(self._envStepCounter)
 
         self.totalObservation = self.getExtendedObservation()
 
@@ -175,11 +172,7 @@ class bioEnv(gym.Env) :
             p.resetJointState(self.bioId, self.freeJointList[i], 0)
             p.setJointMotorControl2(self.bioId, self.freeJointList[i], p.POSITION_CONTROL,targetPosition=0,targetVelocity=0.0,
             positionGain=0.25, velocityGain=0.75, force=50)
-        """   
-        if self.useInverseKinematics:
-            self.endEffPos = [0.4,0,0.85] # x,y,z
-            self.endEffOrn = [0.3,0.4,0.35] # roll,pitch,yaw
-		"""
+
         self._debugGUI()
         p.setGravity(0,0,-9.8)
         #add debug slider
@@ -206,12 +199,6 @@ class bioEnv(gym.Env) :
     def getExtendedObservation(self):
 
         self._observation = self.getObservation()
-
-        #d = goal_distance(np.array(self._observation), np.array(self.targetObservation))
-        """
-        if d < self.bestD:
-            self.bestD = d 
-        """
         self.achieved_goal = self._observation
 
 

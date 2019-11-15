@@ -66,7 +66,7 @@ def main(load_policy=True):
     gamma = 0.9
     memory_limit = 1000000
     normalize_returns = True
-    timesteps = 10000000
+    timesteps = 14000000
     discreteAction = 0
     rend = False
 
@@ -84,14 +84,14 @@ def main(load_policy=True):
                 random_exploration=0.1, action_noise=action_noise)
     
     if (load_policy):
-        model = HER.load("models/TD3/policy_TD3_64batch_freefoot_rex05_phase3.pkl", env=env, n_sampled_goal=4,
+        model = HER.load("models/TD3/best_model_phase2.pkl", env=env, n_sampled_goal=4,
         goal_selection_strategy=goal_selection_strategy,
         tensorboard_log="../pybullet_logs/bioEnv_TD3",
-        buffer_size=1000000,batch_size=64,random_exploration=0.5, action_noise=action_noise)
+        buffer_size=1000000,batch_size=64,random_exploration=0.35, action_noise=action_noise)
     
     model.learn(timesteps,log_interval=100, callback = callback)
    
-    model.save("policy_TD3_64batch_freefoot_rex05_phase4")
+    model.save("policy_TD3_64batch_freefoot_rex03_phase2")
 
 if __name__ == "__main__":
     main()
