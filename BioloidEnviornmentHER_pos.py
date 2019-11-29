@@ -60,9 +60,9 @@ class bioEnv(gym.GoalEnv) :
         self.ep_counter = -1
         self._actionRepeat = actionRepeat
         self.freeJointList = [4, 5, 6, 8, 9, 10, 14, 15, 16, 21, 22, 23] #[]
-        self.targetObservation = [ 0, 0, 0.15345262248306862,     0.0, 0.0, -0.5831853071795866,      -0.00022756908581942603 , -0.000200384263379346 , 0.00010279144557757175 , 0.00015010634498172459 , 0.0002050663891038947 , -0.00024082488576043486 ,  1.1880585171461655 , -2.31561388612597, 1.1892599041779879 , 1.1880174349839125 , -2.3143761387021726  , 1.1886576104218778 ] 
+        self.targetObservation = [ 0, 0, 0.15345262248306862] 
         self._target_pos_dist_min = 0.01
-        self._target_orn_dist_min = 0.1
+        self._target_orn_dist_min = 0.15
         self._target_joints_dist_min = 0.05
         
 
@@ -79,10 +79,10 @@ class bioEnv(gym.GoalEnv) :
             'observation': spaces.Box(-largeValObservation, largeValObservation, shape=(18,), dtype=np.float32),
 
             #the achieved goal is the position reached 
-            'achieved_goal': spaces.Box(-largeValObservation, largeValObservation, shape=(18,), dtype=np.float32),
+            'achieved_goal': spaces.Box(-largeValObservation, largeValObservation, shape=(3,), dtype=np.float32),
 
             #the desired goal is the desired position in space
-            'desired_goal': spaces.Box(-largeValObservation, largeValObservation, shape=(18,), dtype=np.float32)
+            'desired_goal': spaces.Box(-largeValObservation, largeValObservation, shape=(3,), dtype=np.float32)
 
             })
 
@@ -190,7 +190,7 @@ class bioEnv(gym.GoalEnv) :
     def getExtendedObservation(self):
 
         self._observation = self.getObservation()
-        self.achieved_goal = self._observation
+        self.achieved_goal = self._observation[0 : 3]
 
 
         return OrderedDict([
@@ -234,13 +234,8 @@ class bioEnv(gym.GoalEnv) :
         d_pos = goal_distance(np.array(achieved_goal[0:3]), np.array(desired_goal[0:3]))
         d_orn = goal_distance(np.array(achieved_goal[3:6]), np.array(desired_goal[3:6]))
         d_joints = 0 
-        for i in range(6, 18):
-            if self.targetObservation[i]> self._observation[i]:
-                d_joints= d_joints + np.fabs(self.targetObservation[i] - self._observation[i])
-            else: 
-                d_joints = d_joints+ np.fabs(self._observation[i] - self.targetObservation[i])
-        
-        if d_pos <= self._target_pos_dist_min and d_orn <= self._target_orn_dist_min and d_joints <= self._target_joints_dist_min:
+
+        if d_pos <= self._target_pos_dist_min and d_orn <= self._target_orn_dist_min:
             test_done = True
             return 0
         else:

@@ -31,9 +31,9 @@ class bioEnv(gym.GoalEnv) :
     'video.frames_per_second': 50 }
     def __init__(self, urdfRootPath="../ros-bioloid/src/bioloid_master/urdf/mioloid_robot_head.urdf",
         actionRepeat=1,
-        basePosition = [0,0,0.22], 
+        basePosition = [0,0,0.215], 
         baseOrientation = p.getQuaternionFromEuler([0,0,-0.5831853071795866]), 
-        numConrolledJoints=12, 
+        numConrolledJoints=6, 
         renders= False,
         max_episode_steps = 1000,
         test_phase = False,
@@ -49,8 +49,8 @@ class bioEnv(gym.GoalEnv) :
         self.achieved_goal = []
         self._observation = []
         self._envStepCounter = 0
-        self.numControlledJoints = 12
-        self.action_dim = 12
+        self.numControlledJoints = 6
+        self.action_dim = 6
         self._maxSteps = 1000
         self.max_episode_steps = max_episode_steps
         self.renders =renders
@@ -59,11 +59,11 @@ class bioEnv(gym.GoalEnv) :
         self._cam_pitch = -40
         self.ep_counter = -1
         self._actionRepeat = actionRepeat
-        self.freeJointList = [4, 5, 6, 8, 9, 10, 14, 15, 16, 21, 22, 23] #[]
-        self.targetObservation = [ 0, 0, 0.15345262248306862,     0.0, 0.0, -0.5831853071795866,      -0.00022756908581942603 , -0.000200384263379346 , 0.00010279144557757175 , 0.00015010634498172459 , 0.0002050663891038947 , -0.00024082488576043486 ,  1.1880585171461655 , -2.31561388612597, 1.1892599041779879 , 1.1880174349839125 , -2.3143761387021726  , 1.1886576104218778 ] 
+        self.freeJointList = [ 14, 15, 16, 21, 22, 23] #[]
+        self.targetObservation = [ 0, 0, 0.15345262248306862,     0.0, 0.0, -0.5831853071795866,      1.1880585171461655 , -2.31561388612597, 1.1892599041779879 , 1.1880174349839125 , -2.3143761387021726  , 1.1886576104218778 ] 
         self._target_pos_dist_min = 0.01
         self._target_orn_dist_min = 0.1
-        self._target_joints_dist_min = 0.05
+        self._target_joints_dist_min = 0.6
         
 
         p.connect(p.GUI)
@@ -76,13 +76,13 @@ class bioEnv(gym.GoalEnv) :
 
         self.observation_space = spaces.Dict({
 
-            'observation': spaces.Box(-largeValObservation, largeValObservation, shape=(18,), dtype=np.float32),
+            'observation': spaces.Box(-largeValObservation, largeValObservation, shape=(12,), dtype=np.float32),
 
             #the achieved goal is the position reached 
-            'achieved_goal': spaces.Box(-largeValObservation, largeValObservation, shape=(18,), dtype=np.float32),
+            'achieved_goal': spaces.Box(-largeValObservation, largeValObservation, shape=(12,), dtype=np.float32),
 
             #the desired goal is the desired position in space
-            'desired_goal': spaces.Box(-largeValObservation, largeValObservation, shape=(18,), dtype=np.float32)
+            'desired_goal': spaces.Box(-largeValObservation, largeValObservation, shape=(12,), dtype=np.float32)
 
             })
 
@@ -167,8 +167,8 @@ class bioEnv(gym.GoalEnv) :
         self._debugGUI()
         p.setGravity(0,0,-9.8)
         #add debug slider
-        target_joint_pos = [0,0,0,      0,0,0,      0,0,1.188,-2.315,1.188,0,       0,0,1.188,-2.315,1.188,0]
-        init_joint_pos =[0,0,0,      0,0,0,      0,0,0,0,0,0,        0,0,0,0,0,0]
+        #target_joint_pos = [0,0,0,      0,0,0,      0,0,1.188,-2.315,1.188,0,       0,0,1.188,-2.315,1.188,0]
+        #init_joint_pos =[0,0,0,      0,0,0,      0,0,0,0,0,0,        0,0,0,0,0,0]
         jointIds=[]
         paramIds=[]
         joints_num = p.getNumJoints(self.bioId)
@@ -234,7 +234,7 @@ class bioEnv(gym.GoalEnv) :
         d_pos = goal_distance(np.array(achieved_goal[0:3]), np.array(desired_goal[0:3]))
         d_orn = goal_distance(np.array(achieved_goal[3:6]), np.array(desired_goal[3:6]))
         d_joints = 0 
-        for i in range(6, 18):
+        for i in range(6, 12):
             if self.targetObservation[i]> self._observation[i]:
                 d_joints= d_joints + np.fabs(self.targetObservation[i] - self._observation[i])
             else: 

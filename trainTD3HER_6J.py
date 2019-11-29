@@ -18,7 +18,7 @@ import tensorflow as tf
 from stable_baselines.td3.policies import FeedForwardPolicy
 from stable_baselines.ddpg.noise import NormalActionNoise, OrnsteinUhlenbeckActionNoise, AdaptiveParamNoiseSpec
 import numpy as np
-from BioloidEnviornmentHER import bioEnv
+from BioloidEnviornmentHER_6J import bioEnv
 
 
 class CustomTD3Policy(FeedForwardPolicy):
@@ -59,7 +59,7 @@ def callback(_locals, _globals):
 def main(load_policy=False):
     global log_dir
     model_class = TD3  # works also with SAC and DDPG
-    action_space = 12
+    action_space = 6
     normalize_observations = False
     gamma = 0.9
     memory_limit = 1000000

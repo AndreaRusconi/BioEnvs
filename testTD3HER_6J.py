@@ -9,12 +9,12 @@ print(parentdir)
 from stable_baselines import HER, DQN, SAC, DDPG, TD3
 
 from stable_baselines.her import GoalSelectionStrategy, HERGoalEnvWrapper
-from BioloidEnviornmentHER import bioEnv
+from BioloidEnviornmentHER_6J import bioEnv
 model_class = DDPG  # works also with SAC and DDPG
 
 # -j
 
-action_space = 12
+action_space = 6
 # -p
 fixed = False
 # -o
@@ -22,7 +22,7 @@ normalize_observations = False
 # -g
 gamma = 0.9
 # -b
-batch_size = 64
+batch_size = 256
 # -m
 memory_limit = 1000000
 # -r
@@ -37,7 +37,7 @@ env = bioEnv()
 
 goal_selection_strategy = 'future' # equivalent to GoalSelectionStrategy.FUTURE
 # Wrap the model
-model = HER.load("models/TD3/policy_TD3_new.pkl", env=env)
+model = HER.load("models/TD3/best_model.pkl", env=env)
 
 obs = env.reset()
 

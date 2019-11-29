@@ -18,7 +18,7 @@ import tensorflow as tf
 from stable_baselines.td3.policies import FeedForwardPolicy
 from stable_baselines.ddpg.noise import NormalActionNoise, OrnsteinUhlenbeckActionNoise, AdaptiveParamNoiseSpec
 import numpy as np
-from BioloidEnviornmentHER import bioEnv
+from BioloidEnviornmentHER_pos import bioEnv
 
 
 class CustomTD3Policy(FeedForwardPolicy):
