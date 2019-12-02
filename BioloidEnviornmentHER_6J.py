@@ -35,9 +35,9 @@ class bioEnv(gym.GoalEnv) :
         baseOrientation = p.getQuaternionFromEuler([0,0,-0.5831853071795866]), 
         numConrolledJoints=6, 
         renders= True,
-        max_episode_steps = 1000,
+        max_episode_steps = 600,
         test_phase = False,
-        maxSteps = 1000,
+        maxSteps = 600,
         dist_delta = 0.03):
         print("init" + urdfRootPath)
         self.urdfRootPath= urdfRootPath
@@ -51,7 +51,7 @@ class bioEnv(gym.GoalEnv) :
         self._envStepCounter = 0
         self.numControlledJoints = 6
         self.action_dim = 6
-        self._maxSteps = 1000
+        self._maxSteps = maxSteps
         self.max_episode_steps = max_episode_steps
         self.renders =renders
         self._cam_dist = 1.3
@@ -169,7 +169,7 @@ class bioEnv(gym.GoalEnv) :
         for i in range(joints_num):
             p.resetJointState(self.bioId, i, 0)
             p.setJointMotorControl2(self.bioId, i, p.POSITION_CONTROL,targetPosition=0,targetVelocity=0.0,
-            positionGain=0.25, velocityGain=0.75, force=25)
+            positionGain=0.25, velocityGain=0.4, force=25)
 
         self._debugGUI()
         p.setGravity(0,0,-9.8)
@@ -233,7 +233,7 @@ class bioEnv(gym.GoalEnv) :
     	for a in range(len(self.freeJointList)):
         	curr_motor_pos = p.getJointState(self.bioId, self.freeJointList[a])[0]
         	new_motor_pos = curr_motor_pos + action[a] #supposed to be a delta
-        	p.setJointMotorControl2(self.bioId,self.freeJointList[a],p.POSITION_CONTROL,targetPosition=new_motor_pos,targetVelocity=0,positionGain=0.25,velocityGain=0.75,force=25)	
+        	p.setJointMotorControl2(self.bioId,self.freeJointList[a],p.POSITION_CONTROL,targetPosition=new_motor_pos,targetVelocity=0,positionGain=0.25,velocityGain=0.4,force=25)	
    
     def compute_reward(self,  achieved_goal, desired_goal, info):
         
