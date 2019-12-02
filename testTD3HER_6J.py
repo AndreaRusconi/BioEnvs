@@ -28,12 +28,12 @@ memory_limit = 1000000
 # -r
 normalize_returns = False
 # -t
-timesteps = 1000000
+timesteps = 15000000
 policy_name = "pushing_policy"
 discreteAction = 0
 rend = False
 
-env = bioEnv()
+env = bioEnv(renders=True)
 
 goal_selection_strategy = 'future' # equivalent to GoalSelectionStrategy.FUTURE
 # Wrap the model

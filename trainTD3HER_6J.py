@@ -64,7 +64,7 @@ def main(load_policy=False):
     gamma = 0.9
     memory_limit = 1000000
     normalize_returns = True
-    timesteps = 5000000
+    timesteps = 15000000
     discreteAction = 0
     rend = False
 

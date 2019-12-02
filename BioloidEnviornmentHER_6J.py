@@ -34,7 +34,7 @@ class bioEnv(gym.GoalEnv) :
         basePosition = [0,0,0.215], 
         baseOrientation = p.getQuaternionFromEuler([0,0,-0.5831853071795866]), 
         numConrolledJoints=6, 
-        renders= False,
+        renders= True,
         max_episode_steps = 1000,
         test_phase = False,
         maxSteps = 1000,
@@ -66,7 +66,14 @@ class bioEnv(gym.GoalEnv) :
         self._target_joints_dist_min = 0.6
         
 
-        p.connect(p.GUI)
+        if self.renders:
+            cid = p.connect(p.SHARED_MEMORY)
+            if (cid<0):
+                cid = p.connect(p.GUI)
+            p.resetDebugVisualizerCamera(2.5,90,-60,[0.52,-0.2,-0.33])
+        else:
+            p.connect(p.DIRECT)
+
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
 
         self.totalObservation = self.reset()
@@ -157,11 +164,11 @@ class bioEnv(gym.GoalEnv) :
 
         #Load bioloid
         self.bioId = p.loadURDF(self.urdfRootPath, basePosition = self.basePosition , baseOrientation = self.baseOrientation, useFixedBase= False )
-       
+        joints_num = p.getNumJoints(self.bioId)
         
-        for i in range(len(self.freeJointList)):
-            p.resetJointState(self.bioId, self.freeJointList[i], 0)
-            p.setJointMotorControl2(self.bioId, self.freeJointList[i], p.POSITION_CONTROL,targetPosition=0,targetVelocity=0.0,
+        for i in range(joints_num):
+            p.resetJointState(self.bioId, i, 0)
+            p.setJointMotorControl2(self.bioId, i, p.POSITION_CONTROL,targetPosition=0,targetVelocity=0.0,
             positionGain=0.25, velocityGain=0.75, force=25)
 
         self._debugGUI()
@@ -236,7 +243,7 @@ class bioEnv(gym.GoalEnv) :
         d_joints = 0 
         for i in range(6, 12):
             if self.targetObservation[i]> self._observation[i]:
-                d_joints= d_joints + np.fabs(self.targetObservation[i] - self._observation[i])
+                d_joints = d_joints + np.fabs(self.targetObservation[i] - self._observation[i])
             else: 
                 d_joints = d_joints+ np.fabs(self._observation[i] - self.targetObservation[i])
         
