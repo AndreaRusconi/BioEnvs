@@ -1,5 +1,0 @@
-uint16[] dxlIDs
-uint16 startAddress
-uint16[] values
----
-bool txSuccess

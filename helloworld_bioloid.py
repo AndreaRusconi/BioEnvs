@@ -2,11 +2,11 @@ import pybullet as p
 import time
 import math as m
 import pybullet_data
-from BioloidEnviornment import bioEnv
+from BioloidEnviornmentHER_fixed import bioEnv
 import numpy as np 
 
-#bioEnv = bioEnv()
-
+bioEnv = bioEnv()
+"""
 def goal_distance(goal_a, goal_b):
     return np.linalg.norm(goal_a - goal_b, axis = -1)
 
@@ -93,3 +93,4 @@ while True:
 bioloidPos, bioloidOrn = p.getBasePositionAndOrientation(bioId)
 print(bioloidPos,bioloidOrn)
 p.disconnect()
+"""
