@@ -29,7 +29,7 @@ largeValObservation = 100
 class bioEnv(gym.GoalEnv) :
     metadata = {'render.modes': ['human', 'rgb_array'],
     'video.frames_per_second': 50 }
-    def __init__(self, urdfRootPath="../ros-bioloid/src/bioloid_master/urdf/mioloid_robot_head.urdf",
+    def __init__(self, urdfRootPath="ros-bioloid/src/bioloid_master/urdf/mioloid_robot_head.urdf",
         actionRepeat=1,
         basePosition = [0,0,0.215], 
         baseOrientation = p.getQuaternionFromEuler([0,0,-0.5831853071795866]), 
@@ -60,7 +60,7 @@ class bioEnv(gym.GoalEnv) :
         self.ep_counter = -1
         self._actionRepeat = actionRepeat
         self.freeJointList = [ 14, 15, 16, 21, 22, 23] #[]
-        self.targetObservation = [ 0, 0, 0.15,     0.0, 0.0, -0.5831853071795866] 
+        self.targetObservation = [ 0, 0, 0.16,     0.0, 0.0, -0.5831853071795866] 
         self._target_pos_dist_min = 0.02
         self._target_orn_dist_min = 0.1
         

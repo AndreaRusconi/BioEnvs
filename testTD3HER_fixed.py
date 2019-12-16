@@ -33,7 +33,7 @@ env = bioEnv()
 
 goal_selection_strategy = 'future' # equivalent to GoalSelectionStrategy.FUTURE
 # Wrap the model
-model = HER.load("models/TD3/best_model_part_10.pkl", env=env)
+model = HER.load("models/TD3/best_model_10g_part_2.pkl", env=env)
 
 obs = env.reset()
 

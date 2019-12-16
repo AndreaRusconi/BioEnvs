@@ -52,7 +52,7 @@ def callback(_locals, _globals):
                 best_mean_reward = mean_reward
                 # Example for saving best model
                 print("Saving new best model")
-                _locals['self'].save(log_dir_policy + 'best_model_part_10.pkl')
+                _locals['self'].save(log_dir_policy + 'best_model_10g_part_2.pkl')
     n_steps += 1
     return True
 
@@ -82,10 +82,10 @@ def main(load_policy=True):
                 random_exploration=0.3, action_noise=action_noise)
     
     if (load_policy):
-        model = HER.load("models/TD3/best_model_part_9.pkl", env=env, n_sampled_goal=4,
+        model = HER.load("models/TD3/myModel.pkl", env=env, n_sampled_goal=4,
         goal_selection_strategy=goal_selection_strategy,
         tensorboard_log="../pybullet_logs/bioEnv_TD3",
-        buffer_size=1000000,batch_size=256,random_exploration=0.2, action_noise=action_noise)
+        buffer_size=1000000,batch_size=256,random_exploration=0.1, action_noise=action_noise)
     
     model.learn(timesteps,log_interval=100, callback = callback)
    
