@@ -6,7 +6,7 @@ os.sys.path.insert(0, parentdir)
 print(parentdir)
 
 
-from stable_baselines import HER, DQN, SAC, DDPG, TD3
+from stable_baselines import HER,  TD3
 
 from stable_baselines.her import GoalSelectionStrategy, HERGoalEnvWrapper
 from BioloidEnviornmentHER_fixed import bioEnv
@@ -33,12 +33,14 @@ env = bioEnv()
 
 goal_selection_strategy = 'future' # equivalent to GoalSelectionStrategy.FUTURE
 # Wrap the model
-model = HER.load("models/TD3/best_model_10g_part_2.pkl", env=env)
+model = HER.load("model.pkl", env=env)
 
 obs = env.reset()
-
+i = 0 
 for _ in range(10000):
+    i +=1
     action, _ = model.predict(obs)
     obs, reward, done, _ = env.step(action)
     if done:
+        print(str(i) + " " + str(done))
         obs = env.reset()

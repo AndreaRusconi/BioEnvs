@@ -34,7 +34,7 @@ class bioEnv(gym.GoalEnv) :
         basePosition = [0,0,0.215], 
         baseOrientation = p.getQuaternionFromEuler([0,0,-0.5831853071795866]), 
         numConrolledJoints=6, 
-        renders = True,
+        renders = False,
         max_episode_steps = 400,
         test_phase = False,
         maxSteps = 400,

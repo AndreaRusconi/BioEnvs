@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 from tensorflow import keras
+from BioloidEnviornmentHER_fixed import bioEnv
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 import numpy 
@@ -15,6 +16,23 @@ def get_dict(dict):
     obs.append(o)
     obs= numpy.asarray(obs)
     return obs
+    
+def Squat():
+	env = bioEnv()
+	obs_dict = env.reset()
+	obs = get_dict(obs_dict)
+	for i in range(10000):
+	    action= model_K.predict(obs)
+	    print(action)
+	    obs, reward, done , _= env.step(action[0])
+	    obs = get_dict(obs)
+	    
+	    if done:
+	        print(i)
+	        obs = env.reset()
+	        print(obs)
+	        obs = get_dict(obs)
+
 
 batch_size = 256
 num_classes = 1
@@ -56,16 +74,13 @@ model_K.add(Dense(6, activation='tanh', trainable = False))
 #setting weights
 
 model_K.layers[1].set_weights(fc0)
-#print(config1)
 model_K.layers[2].set_weights(fc1)
-config2 = model_K.layers[2].get_config()
-
 model_K.layers[3].set_weights(dense)
-config3 = model_K.layers[3].get_config()
+
 
 #check pesi 
 
 
 model_K.summary()
-print(model_K.predict(init_obs))
+
 

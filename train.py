@@ -52,7 +52,7 @@ def callback(_locals, _globals):
                 best_mean_reward = mean_reward
                 # Example for saving best model
                 print("Saving new best model")
-                _locals['self'].save(log_dir_policy + 'best_model_10g_part_2.pkl')
+                _locals['self'].save(log_dir_policy + 'NO.pkl')
     n_steps += 1
     return True
 
