@@ -809,7 +809,7 @@
       <origin rpy="0.0 -1.570795 0" xyz="0 0 -0.032"/>
       <axis xyz="0 0 1"/>
       <child link="right_upper_leg_link"/>
-      <limit effort="10" lower="-1.570795" upper="1.9" velocity="1.0"/>
+      <limit effort="10" lower="-0.5" upper="2" velocity="1.0"/>
     </joint>
     <!--RIGHT_UPPER_LEG_LINK -->
     <link name="right_upper_leg_link">
@@ -851,7 +851,7 @@
       <origin rpy="0 0 0" xyz="0.0145 0.075 0"/>
       <axis xyz="0 0 1"/>
       <child link="right_lower_leg_link"/>
-      <limit effort="10" lower="-2.4" upper="0.0" velocity="1.0"/>
+      <limit effort="10" lower="-2.3" upper="0.0" velocity="1.0"/>
     </joint>
     <!-- LOWER LEG LINK -->
     <link name="right_lower_leg_link">
@@ -1124,7 +1124,7 @@
       <origin rpy="3.14159 -1.570795 0" xyz="0 0 0.032"/>
       <axis xyz="0 0 1"/>
       <child link="left_upper_leg_link"/>
-      <limit effort="10" lower="-1.570795" upper="1.9" velocity="1.0"/>
+      <limit effort="10" lower="-0.5" upper="2" velocity="1.0"/>
     </joint>
     <link name="left_upper_leg_link">
       <visual>

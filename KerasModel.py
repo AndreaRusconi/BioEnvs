@@ -7,9 +7,9 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras import backend as K
 import numpy 
+import time
 from gym import spaces
-import foolbox 
-import maraboupy
+
 #salvataggio modello in formato .pb per Marabou 
 def savePb(model):
 	frozen_graph = freeze_session(K.get_session(),
@@ -54,18 +54,19 @@ def dictToArray(dict):
     obs= numpy.asarray(obs)
     return obs
 #squat test 
-def Squat():
-	for i in range(10000):
-	    action= model_K.predict(obs)
-	    print(action)
-	    obs, reward, done , _= env.step(action[0])
-	    obs = get_dict(obs)
-	    
-	    if done:
-	        print(i)
-	        obs = env.reset()
-	        print(obs)
-	        obs = get_dict(obs)
+def Squat(obs):
+
+    for i in range(1000):
+        action= model_K.predict(obs)
+        print(action)
+        obs, reward, done , _= env.step(action[0])
+        obs = dictToArray(obs)
+        
+        if done:
+            print(i)
+            obs = env.reset()
+            print(obs)
+            obs = dictToArray(obs)
 #____________________________________________________________
 
 
@@ -74,9 +75,6 @@ num_classes = 1
 n_input = 24
 output = [] 
 init_obs = numpy.asarray([[0.,0.,0.215 ,0.,0.,-0.5831853071795866  ,0.,0.,0.,0.,0.,0.,    0.,0.,0.215,0.,0.,-0.5831853071795866      ,0.,0.,0.16, 0.0,0.0,-0.5831853071795866]])
-
-false = numpy.asarray([[1.,0.,0.215 ,0.,0.,-0.5831853071795866  ,0.,0.,0.,0.,0.,0.,    0.,0.,0.215,0.,0.,-0.5831853071795866      ,0.,0.,0.16, 0.0,0.0,-0.5831853071795866]])
-
 first_state = [0,0,0.215 ,0,0,-0.5831853071795866  ,0,0,0,0,0,0,    0,0,0.215,0,0,-0.5831853071795866]
 target =  numpy.asarray([ 0, 0, 0.16,     0.0, 0.0, -0.5831853071795866] )
 
@@ -106,18 +104,8 @@ model_K.layers[3].set_weights(dense)
 
 model_K.summary()
 
-"""#S_BASELINES
+#S_BASELINES
 env = bioEnv()
 obs_dict = env.reset()
 obs = dictToArray(obs_dict)
-"""
-
-#FOOLBOX
-criterion = foolbox.criteria.Misclassification()
-fModel = foolbox.models.KerasModel(model_K, bounds = (-1,1), predicts = "logits")
-logits = fModel.forward(init_obs)
-print(logits)
-label = numpy.array(fModel.forward(init_obs), ndmin=2) 
-print(label)
-attack = foolbox.attacks.GenAttack(fModel, criterion )
-adversarial = attack(false, fModel.forward(init_obs))
+Squat(obs)

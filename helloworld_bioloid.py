@@ -5,8 +5,8 @@ import pybullet_data
 from BioloidEnviornmentHER_fixed import bioEnv
 import numpy as np 
 
-bioEnv = bioEnv()
-"""
+#bioEnv = bioEnv()
+
 def goal_distance(goal_a, goal_b):
     return np.linalg.norm(goal_a - goal_b, axis = -1)
 
@@ -21,15 +21,18 @@ p.setGravity(0,0,-9.8)
 p.setAdditionalSearchPath(pybullet_data.getDataPath())
 
 p.loadURDF("plane.urdf")
-basePosition = [0, 0, 0.215]
+basePosition = [0, 0, 0.25]
 
 baseOrientation = p.getQuaternionFromEuler([0,0,-0.5831853071795866])
 
-bioId = p.loadURDF("../ros-bioloid/src/bioloid_master/urdf/mioloid_robot_head.urdf",basePosition,baseOrientation ,useFixedBase = True )    
+bioId = p.loadURDF("ros-bioloid/src/bioloid_master/urdf/mioloid_robot_head.urdf",basePosition,baseOrientation ,useFixedBase = True )    
 print("Bioloid id:"+ str(bioId))
 
 #add debug slider  0.018959998305018582, -0.0030300449845015653, 0.15345262248306862,
 init_pos = [  1.1880585171461655 , -2.31561388612597, 1.1892599041779879 , 1.1880174349839125 , -2.3143761387021726  , 1.1886576104218778 ] 
+for i in range(len(init_pos)):
+    print( "{0:.2f}".format(init_pos[i]))
+    print( "{0:.1f}".format(init_pos[i]))
 targetPos  = [ 0, 0, 0.15345262248306862,0.0, 0.0, -0.5831853071795866,  1.1880585171461655 , -2.31561388612597, 1.1892599041779879 , 1.1880174349839125 , -2.3143761387021726  , 1.1886576104218778 ] 
 norm_joints = []
 jointIds=[]
@@ -38,8 +41,8 @@ jointName=[]
 freeJointList = [ 14, 15, 16, 21, 22, 23]
 joints_num = p.getNumJoints(bioId)
 
-print("len init_pos ",len(init_pos))
-print("Number of joints:"+ str(joints_num))
+#print("len init_pos ",len(init_pos))
+#print("Number of joints:"+ str(joints_num))
 
 for k in range(joints_num):
 	a = p.getJointInfo(bioId,k)
@@ -60,7 +63,7 @@ while True:
     obs.extend(list(pos))
     euler = p.getEulerFromQuaternion(orn)
     obs.extend(list(euler))
-    print(obs[3:6])
+    #print(obs[3:6])
     for i in range(len(freeJointList)):
         jointStates.append(p.getJointState(bioId, freeJointList[i]))
     jointPoses = [x[0] for x in jointStates]
@@ -79,12 +82,11 @@ while True:
             sm = sm + np.fabs(targetPos[i] - obs[i])
         else: 
             sm = sm + np.fabs(obs[i] - targetPos[i])
-    
-
+    """
     print("d_pos:" + str(d_pos))
     print("d_orn:" + str(d_orn))
     print("sm:" + str(sm))
-
+    """
     time.sleep(0.01)
 
 
@@ -93,4 +95,3 @@ while True:
 bioloidPos, bioloidOrn = p.getBasePositionAndOrientation(bioId)
 print(bioloidPos,bioloidOrn)
 p.disconnect()
-"""

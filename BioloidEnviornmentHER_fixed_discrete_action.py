@@ -63,6 +63,9 @@ class bioEnv(gym.GoalEnv) :
         self.targetObservation = [ 0, 0, 0.16,     0.0, 0.0, -0.5831853071795866] 
         self._target_pos_dist_min = 0.02
         self._target_orn_dist_min = 0.1
+        self.hipStep = 0.01613
+        self.kneeStep = 0.01769
+        self.ankleStep = 0.01616
         
 
         if self.renders:
@@ -101,8 +104,37 @@ class bioEnv(gym.GoalEnv) :
         self.viewer = None
 
     def step(self, action):
-    	action = [float(i*0.05) for i in action]
-    	return self.step2(action)
+    	#action = [float(i*0.05) for i in action]
+        if float("{0:.1f}".format(float(action[0])))!= 0 :
+            action[0]=self.hipStep*10/float(("{0:.1f}".format(float(action[0]))))
+        else: 
+            action[0]="{0:.1f}".format(float(action[0]))
+
+        if float("{0:.1f}".format(float(action[3])))!= 0 :
+            action[3]=self.hipStep*10/float(("{0:.1f}".format(float(action[3]))))
+        else:
+            action[3]="{0:.1f}".format(float(action[3]))
+
+        if float("{0:.1f}".format(float(action[1])))!=0:
+            action[1]=self.kneeStep*10/float(("{0:.1f}".format(float(action[1]))))
+        else:
+            action[1]="{0:.1f}".format(float(action[1]))
+
+        if float("{0:.1f}".format(float(action[4])))!=0:
+            action[4]=self.kneeStep*10/float(("{0:.1f}".format(float(action[4]))))
+        else:
+            action[4]="{0:.1f}".format(float(action[4]))
+
+        if float("{0:.1f}".format(float(action[2])))!=0:
+            action[2]=self.ankleStep*10/float(("{0:.1f}".format(float(action[2]))))
+        else:
+            action[2]="{0:.1f}".format(float(action[2]))
+
+        if float("{0:.1f}".format(float(action[5])))!=0:
+            action[5]=self.ankleStep*10/float(("{0:.1f}".format(float(action[5]))))
+        else:
+             action[5]="{0:.1f}".format(float(action[5]))
+        return self.step2(action)
 
     def step2(self,action):
        

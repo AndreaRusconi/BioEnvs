@@ -33,13 +33,14 @@ env = bioEnv()
 
 goal_selection_strategy = 'future' # equivalent to GoalSelectionStrategy.FUTURE
 # Wrap the model
-model = HER.load("model.pkl", env=env)
+model = HER.load("models/TD3/curriculum/best_model_part_11_10g_TRUE.pkl", env=env)
 
 obs = env.reset()
 i = 0 
 for _ in range(10000):
     i +=1
     action, _ = model.predict(obs)
+    print(action)
     obs, reward, done, _ = env.step(action)
     if done:
         print(str(i) + " " + str(done))

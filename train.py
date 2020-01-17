@@ -18,7 +18,7 @@ import tensorflow as tf
 from stable_baselines.td3.policies import FeedForwardPolicy
 from stable_baselines.ddpg.noise import NormalActionNoise, OrnsteinUhlenbeckActionNoise, AdaptiveParamNoiseSpec
 import numpy as np
-from BioloidEnviornmentHER_fixed import bioEnv
+from BioloidEnviornmentHER_fixed_discrete_action import bioEnv
 
 
 class CustomTD3Policy(FeedForwardPolicy):
@@ -52,7 +52,7 @@ def callback(_locals, _globals):
                 best_mean_reward = mean_reward
                 # Example for saving best model
                 print("Saving new best model")
-                _locals['self'].save(log_dir_policy + 'NO.pkl')
+                _locals['self'].save(log_dir_policy + 'best_policy_discr.pkl')
     n_steps += 1
     return True
 
@@ -62,7 +62,7 @@ def main(load_policy=True):
     action_space = 6
     gamma = 0.9
     memory_limit = 1000000
-    timesteps = 1000000
+    timesteps = 15000000
     discreteAction = 0
     rend = False
     # learning rate
@@ -82,14 +82,14 @@ def main(load_policy=True):
                 random_exploration=0.3, action_noise=action_noise)
     
     if (load_policy):
-        model = HER.load("models/TD3/myModel.pkl", env=env, n_sampled_goal=4,
+        model = HER.load("models/TD3/curriculum/best_model_part_11_10g_TRUE.pkl", env=env, n_sampled_goal=4,
         goal_selection_strategy=goal_selection_strategy,
         tensorboard_log="../pybullet_logs/bioEnv_TD3",
-        buffer_size=1000000,batch_size=256,random_exploration=0.1, action_noise=action_noise)
+        buffer_size=1000000,batch_size=256,random_exploration=0.3, action_noise=action_noise)
     
     model.learn(timesteps,log_interval=100, callback = callback)
    
-    model.save("policy_TD3_part_10")
+    model.save("policy_TD3_Discr")
 
 if __name__ == "__main__":
     main()
